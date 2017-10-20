@@ -1,0 +1,170 @@
+﻿
+#   ______                       ____       _____       _ __  _                 
+#  /_  __/_  ______  ___        / __ \___  / __(_)___  (_) /_(_)___  ____  _____
+#   / / / / / / __ \/ _ \______/ / / / _ \/ /_/ / __ \/ / __/ / __ \/ __ \/ ___/
+#  / / / /_/ / /_/ /  __/_____/ /_/ /  __/ __/ / / / / / /_/ / /_/ / / / (__  ) 
+# /_/  \__, / .___/\___/     /_____/\___/_/ /_/_/ /_/_/\__/_/\____/_/ /_/____/  
+#     /____/_/                                                                  
+Types:
+# Defines .NET Types for later uses-
+#
+# Sample:
+#    - &tSharedDouble -> Defines a reference to the Type definition
+#        IOTranscriber.Lib.ValueTypes.SharedDouble, IOTranscriber.Lib -> Class and Assembly name
+#
+########## Variable-Types ############
+    - &tSharedDouble
+        IOTranscriber.Lib.ValueTypes.SharedDouble, IOTranscriber.Lib
+    - &tSharedDoubleBuffer
+        IOTranscriber.Lib.ValueTypes.SharedDouble+VariableChangeBuffer, IOTranscriber.Lib
+
+    - &tSharedInterger
+        IOTranscriber.Lib.ValueTypes.SharedInterger, IOTranscriber.Lib
+    - &tSharedIntergerBuffer
+        IOTranscriber.Lib.ValueTypes.SharedInterger+VariableChangeBuffer, IOTranscriber.Lib
+
+    - &tSharedInt64
+        IOTranscriber.Lib.ValueTypes.SharedInt64, IOTranscriber.Lib
+    - &tSharedInt64Buffer
+        IOTranscriber.Lib.ValueTypes.SharedInt64+VariableChangeBuffer, IOTranscriber.Lib
+
+    - &tSharedInt64Buffer
+        IOTranscriber.Lib.ValueTypes.SharedInt64+VariableChangeBuffer, IOTranscriber.Lib
+    - &tSharedBoolBuffer
+        IOTranscriber.Lib.ValueTypes.SharedBool+VariableChangeBuffer, IOTranscriber.Lib
+
+    - &tSharedBool
+        IOTranscriber.Lib.ValueTypes.SharedBool, IOTranscriber.Lib
+    - &tSharedBoolBuffer
+        IOTranscriber.Lib.ValueTypes.SharedBool+VariableChangeBuffer, IOTranscriber.Lib
+
+    - &tSharedString
+        IOTranscriber.Lib.ValueTypes.SharedString, IOTranscriber.Lib
+    - &tSharedStringBuffer
+        IOTranscriber.Lib.ValueTypes.SharedString+VariableChangeBuffer, IOTranscriber.Lib
+
+    - &tSharedUInt32
+        IOTranscriber.Lib.ValueTypes.SharedUInt32, IOTranscriber.Lib
+    - &tSharedUInt32Buffer
+        IOTranscriber.Lib.ValueTypes.tSharedUInt32+VariableChangeBuffer, IOTranscriber.Lib
+########## Endpoint-Types ############
+    - &tTCPClient
+        IOTranscriber.Lib.Endpoints.TCPClient, IOTranscriber.Lib
+    - &tTCPServer
+        IOTranscriber.Lib.Endpoints.TCPServer, IOTranscriber.Lib
+    - &tDummyEndpoint
+        IOTranscriber.Lib.Endpoints.DummyEndpoint, IOTranscriber.Lib
+########## Pipe-Types ############
+    - &tIOPipe
+        IOTranscriber.Lib.IOPipe, IOTranscriber.Lib
+########## Converter-Types ############
+    - &tDouble2VirtuOS
+        IOTranscriber.Lib.Converter.Double2VirtuOS, IOTranscriber.Lib
+    - &tBool2VirtuOS
+        IOTranscriber.Lib.Converter.Bool2VirtuOS, IOTranscriber.Lib
+    - &tConverterScript
+        IOTranscriber.Lib.Converter.ConverterScript, IOTranscriber.Lib
+
+
+#    _____ __                        __   _    __           _       __    __         
+#   / ___// /_  ____ _________  ____/ /  | |  / /___ ______(_)___ _/ /_  / /__  _____
+#   \__ \/ __ \/ __ `/ ___/ _ \/ __  /   | | / / __ `/ ___/ / __ `/ __ \/ / _ \/ ___/
+#  ___/ / / / / /_/ / /  /  __/ /_/ /    | |/ / /_/ / /  / / /_/ / /_/ / /  __(__  ) 
+# /____/_/ /_/\__,_/_/   \___/\__,_/     |___/\__,_/_/  /_/\__,_/_.___/_/\___/____/  
+#                                                                                    
+# Defines the Variables wich can be shared between Endpoints.
+#
+# Sample:
+#    - &vRobIOs                 -> Defines a reference for further uses.
+#        type: *tSharedUInt32   -> Defines the Type of the variable (See "Type-Definitions").
+#        value: 0               -> Init value (optional)
+#        name: RobIOs           -> Name of the variabe
+#
+Values:
+	- &vDouble
+		type: *tSharedDouble
+		value: 0
+		name: SharedDouble
+	- &vBool
+		type: *tSharedBool
+		value: True
+		name: SharedBool
+	- &vString
+		type: *tSharedString
+		value: Hello World
+		name: SharedString
+################################################
+
+
+#     ______          __            _       __      
+#    / ____/___  ____/ /___  ____  (_)___  / /______
+#   / __/ / __ \/ __  / __ \/ __ \/ / __ \/ __/ ___/
+#  / /___/ / / / /_/ / /_/ / /_/ / / / / / /_(__  ) 
+# /_____/_/ /_/\__,_/ .___/\____/_/_/ /_/\__/____/  
+#                  /_/                              
+# Communication endpoints
+#
+# Sample:
+#    Rob: &eRob                 -> Defines the Name and a reference for the Endpoint
+#        #type: *tTCPClient     -> Endpoint Type (TCP-Client)
+#        type: *tDummyEndpoint 
+#        port: 1000             -> Server point
+#        host: 10.73.10.93      -> Server Address
+#        #host: 10.73.200.160
+#        readingcycle: 50       -> Period-time between sending-intervall (optional)
+#        input:                 -> Variable -> Device
+#            -   *vRobSendAll   -> Variable by direct reference
+#            -                  -> Variable by IOPipe (used for IO Renameing)
+#                type: *tIOPipe
+#                name: TCSOLVERRT.INPUTS.ROB.J1     -> Name of the pipe
+#                value: *vRobJ1L-> Reference to Variabe
+#                displayname: J1    -> Displayed name (optional)
+#
+#        output:                -> Device -> Variable
+#            -   *vRobJ1        -> Variable by direct reference
+#
+Endpoints:
+    Server: &eServer
+        #type: *tTCPServer
+		type: *tDummyEndpoint
+        port: 1234
+        readingcycle: 50
+        input:
+            -   *vDouble
+			-   *vBool
+			-   *vString
+
+        output:
+            -   *vDouble
+			-   *vBool
+			-   *vString
+
+    Client: &eClient
+        #type: *tTCPClient
+		type: *tDummyEndpoint
+        port: 1234
+        host: 127.0.0.1
+        readingcycle: 50
+        input:
+            -   *vDouble
+			-   *vBool
+			-   *vString
+
+        output:
+            -   *vDouble
+			-   *vBool
+			-   *vString
+
+#     __  ___          __      __         
+#    /  |/  /___  ____/ /_  __/ /__  _____
+#   / /|_/ / __ \/ __  / / / / / _ \/ ___/
+#  / /  / / /_/ / /_/ / /_/ / /  __(__  ) 
+# /_/  /_/\____/\__,_/\__,_/_/\___/____/  
+#                                         
+# Modules:
+#     -
+#         type: *tConverterScript
+#         src: *vRobJ6
+#         dest: *vRobJ6L
+#         readingcycle: 50
+#         code: Result=(int)(value*1000);
